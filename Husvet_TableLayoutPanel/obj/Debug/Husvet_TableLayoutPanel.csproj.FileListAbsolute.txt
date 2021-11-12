@@ -1,0 +1,9 @@
+C:\Visual Studio Projects\C#\Husvet\Husvet_TableLayoutPanel\bin\Debug\Husvet_TableLayoutPanel.exe.config
+C:\Visual Studio Projects\C#\Husvet\Husvet_TableLayoutPanel\bin\Debug\Husvet_TableLayoutPanel.exe
+C:\Visual Studio Projects\C#\Husvet\Husvet_TableLayoutPanel\bin\Debug\Husvet_TableLayoutPanel.pdb
+C:\Visual Studio Projects\C#\Husvet\Husvet_TableLayoutPanel\obj\Debug\Husvet_TableLayoutPanel.csproj.AssemblyReference.cache
+C:\Visual Studio Projects\C#\Husvet\Husvet_TableLayoutPanel\obj\Debug\Husvet_TableLayoutPanel.Properties.Resources.resources
+C:\Visual Studio Projects\C#\Husvet\Husvet_TableLayoutPanel\obj\Debug\Husvet_TableLayoutPanel.csproj.GenerateResource.cache
+C:\Visual Studio Projects\C#\Husvet\Husvet_TableLayoutPanel\obj\Debug\Husvet_TableLayoutPanel.csproj.CoreCompileInputs.cache
+C:\Visual Studio Projects\C#\Husvet\Husvet_TableLayoutPanel\obj\Debug\Husvet_TableLayoutPanel.exe
+C:\Visual Studio Projects\C#\Husvet\Husvet_TableLayoutPanel\obj\Debug\Husvet_TableLayoutPanel.pdb

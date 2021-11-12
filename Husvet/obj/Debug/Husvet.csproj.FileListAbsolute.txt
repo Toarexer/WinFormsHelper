@@ -1,0 +1,10 @@
+C:\Visual Studio Projects\C#\Husvet\Husvet\bin\Debug\Husvet.exe.config
+C:\Visual Studio Projects\C#\Husvet\Husvet\bin\Debug\Husvet.exe
+C:\Visual Studio Projects\C#\Husvet\Husvet\bin\Debug\Husvet.pdb
+C:\Visual Studio Projects\C#\Husvet\Husvet\obj\Debug\Husvet.csproj.AssemblyReference.cache
+C:\Visual Studio Projects\C#\Husvet\Husvet\obj\Debug\Husvet.HusvetForm.resources
+C:\Visual Studio Projects\C#\Husvet\Husvet\obj\Debug\Husvet.Properties.Resources.resources
+C:\Visual Studio Projects\C#\Husvet\Husvet\obj\Debug\Husvet.csproj.GenerateResource.cache
+C:\Visual Studio Projects\C#\Husvet\Husvet\obj\Debug\Husvet.csproj.CoreCompileInputs.cache
+C:\Visual Studio Projects\C#\Husvet\Husvet\obj\Debug\Husvet.exe
+C:\Visual Studio Projects\C#\Husvet\Husvet\obj\Debug\Husvet.pdb
