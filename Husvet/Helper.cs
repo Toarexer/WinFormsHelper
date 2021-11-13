@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace Husvet
+namespace WindowsFormsHelper
 {
     static class Helper
     {
@@ -15,14 +15,32 @@ namespace Husvet
                 data.Dock = DockStyle.Fill;
                 data.RowHeadersVisible = false;
                 data.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                data.CellValueChanged += (object sender, DataGridViewCellEventArgs e) =>
+                {
+                    string propertyName = data[0, e.RowIndex].Value.ToString();
+                    PropertyInfo propertyInfo = control.GetType().GetProperty(propertyName);
+                    object value = data[1, e.RowIndex].Value;
+
+                    try
+                    {
+                        // Minimal Enum support
+                        if (propertyInfo.PropertyType.IsEnum)
+                            value = Enum.Parse(propertyInfo.PropertyType, value.ToString());
+                        propertyInfo.SetValue(control, Convert.ChangeType(value, propertyInfo.PropertyType));
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message, "Convertion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                };
 
                 DataGridViewColumn names = new DataGridViewTextBoxColumn(), values = new DataGridViewTextBoxColumn();
                 names.HeaderText = "Name";
                 values.HeaderText = "Value";
-                names.ReadOnly = values.ReadOnly = true;
+                names.ReadOnly = true;
                 names.AutoSizeMode = values.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
                 values.SortMode = DataGridViewColumnSortMode.NotSortable;
-
+                
                 data.Columns.AddRange(names, values);
                 foreach (PropertyInfo property in control.GetType().GetProperties())
                     data.Rows.Add(new object[] { property.Name, property.GetValue(control) });
