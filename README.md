@@ -3,7 +3,8 @@ Why? Because our school computers struggle to run Visual Studio!
 
 ## Info
 The Helper class adds the option to the form to move, resize or change some attributes of the controls.\
-You can switch between _move_ and _resize_ mode with **F2** and open the properties form with **F3**.
+You can switch between _move_ and _resize_ mode with **F2** and open the properties form with **F3**.\
+This can help to test out how changes affect the controls during runtime without the need to recompile the program.
 
 ## Usage
 The [Helper.cs](Husvet/Helper.cs) file contains all the necessary code. The rest is just an old random school assignment than I test with.\
