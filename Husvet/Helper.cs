@@ -9,6 +9,8 @@ namespace WindowsFormsHelper
     {
         class PropertiesForm : Form
         {
+            bool ignoreEvent = false;
+
             public PropertiesForm(Control control)
             {
                 DataGridView data = new DataGridView();
@@ -17,20 +19,50 @@ namespace WindowsFormsHelper
                 data.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
                 data.CellValueChanged += (object sender, DataGridViewCellEventArgs e) =>
                 {
+                    if (ignoreEvent)
+                        return;
                     string propertyName = data[0, e.RowIndex].Value.ToString();
                     PropertyInfo propertyInfo = control.GetType().GetProperty(propertyName);
                     object value = data[1, e.RowIndex].Value;
 
+                    void setValueText()
+                    {
+                        ignoreEvent = true;
+                        data[1, e.RowIndex].Value = propertyInfo.GetValue(control);
+                        ignoreEvent = false;
+                    }
+
                     try
                     {
-                        // Minimal Enum support
+                        string string_value = value.ToString();
+
+                        // Set struct
+                        if (propertyInfo.PropertyType.IsValueType && !propertyInfo.PropertyType.IsEnum && string_value.StartsWith("{") && string_value.EndsWith("}"))
+                        {
+                            object struct_object = propertyInfo.GetValue(control);
+                            foreach (string v in string_value.Trim('{', '}').Split(','))
+                            {
+                                string[] s = v.Split('=');
+                                PropertyInfo struct_propetyInfo = struct_object.GetType().GetProperty(s[0].Trim(' '));
+                                struct_propetyInfo.SetValue(struct_object, Convert.ChangeType(s[1].Trim(' '), struct_propetyInfo.PropertyType));
+                            }
+                            value = struct_object;
+                        }
+
+                        // Set enum
                         if (propertyInfo.PropertyType.IsEnum)
-                            value = Enum.Parse(propertyInfo.PropertyType, value.ToString());
+                            value = Enum.Parse(propertyInfo.PropertyType, string_value);
+
                         propertyInfo.SetValue(control, Convert.ChangeType(value, propertyInfo.PropertyType));
+                        // Format text
+                        setValueText();
                     }
                     catch (Exception exception)
                     {
-                        MessageBox.Show(exception.Message, "Convertion Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        string caption = exception.Message == "Property set method not found." ? "Failed to set Property" : "Convertion Error";
+                        MessageBox.Show(exception.Message, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // Restore text
+                        setValueText();
                     }
                 };
 
