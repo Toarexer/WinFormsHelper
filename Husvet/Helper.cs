@@ -17,6 +17,32 @@ namespace WindowsFormsHelper
                 data.Dock = DockStyle.Fill;
                 data.RowHeadersVisible = false;
                 data.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+                data.CellDoubleClick += (object sender, DataGridViewCellEventArgs e) =>
+                {
+                    string string_value = data[1, e.RowIndex].Value.ToString();
+                    string message = "";
+                    string name = control.Name.Length == 0 ? control.GetType().ToString() : control.Name;
+
+                    double outdouble;
+                    bool outbool;
+
+                    if (string_value.StartsWith("{") && string_value.EndsWith("}"))
+                        foreach (string v in string_value.Trim('{', '}').Split(','))
+                            message += $"{name}.{data[0, e.RowIndex].Value}.{v.Trim(' ')};\n";
+
+                    else if (double.TryParse(string_value, out outdouble))
+                        message = $"{name}.{data[0, e.RowIndex].Value}={string_value};\n";
+
+                    else if (bool.TryParse(string_value, out outbool))
+                        message = $"{name}.{data[0, e.RowIndex].Value}={string_value.ToLower()};\n";
+
+                    else return;
+
+                    if (MessageBox.Show(message, "Do you want to copy the text?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        Clipboard.SetText(message);
+                };
+
                 data.CellValueChanged += (object sender, DataGridViewCellEventArgs e) =>
                 {
                     if (ignoreEvent)
@@ -129,6 +155,8 @@ namespace WindowsFormsHelper
 
         static void KeyDown(object sender, KeyEventArgs e)
         {
+            if (selected == null)
+                return;
             switch (e.KeyCode)
             {
                 case Keys.F2:
