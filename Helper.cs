@@ -16,10 +16,14 @@ namespace WindowsFormsHelper
                 DataGridView data = new DataGridView();
                 data.Dock = DockStyle.Fill;
                 data.RowHeadersVisible = false;
+                data.AllowUserToResizeRows = false;
                 data.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                data.EditMode = DataGridViewEditMode.EditOnEnter;
 
                 data.CellDoubleClick += (object sender, DataGridViewCellEventArgs e) =>
                 {
+                    if (data[1, e.RowIndex].Value == null)
+                        return;
                     string string_value = data[1, e.RowIndex].Value.ToString();
                     string message = "";
                     string name = control.Name.Length == 0 ? control.GetType().ToString() : control.Name;
@@ -98,7 +102,7 @@ namespace WindowsFormsHelper
                 names.ReadOnly = true;
                 names.AutoSizeMode = values.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
                 values.SortMode = DataGridViewColumnSortMode.NotSortable;
-                
+
                 data.Columns.AddRange(names, values);
                 foreach (PropertyInfo property in control.GetType().GetProperties())
                     data.Rows.Add(new object[] { property.Name, property.GetValue(control) });
@@ -112,7 +116,8 @@ namespace WindowsFormsHelper
         static Point lastLocation;
         static Size originalSize;
         static Control dragged, selected;
-        static bool resizeMode;
+        static Icon originalIcon;
+        static bool resizeMode, editMode;
 
         static void SetText(Control control)
         {
@@ -124,6 +129,8 @@ namespace WindowsFormsHelper
 
         static void MouseDown(object sender, MouseEventArgs e)
         {
+            if (!editMode)
+                return;
             lastLocation = e.Location;
             dragged = selected;
             originalSize = dragged.Size;
@@ -134,10 +141,8 @@ namespace WindowsFormsHelper
         static void MouseMove(object sender, MouseEventArgs e)
         {
             SetText(selected);
-
-            if (dragged == null)
+            if (!editMode || dragged == null)
                 return;
-
             if (resizeMode)
             {
                 dragged.Width = originalSize.Width + e.Location.X - lastLocation.X;
@@ -149,23 +154,29 @@ namespace WindowsFormsHelper
 
         static void MouseUp(object sender, MouseEventArgs e)
         {
+            if (!editMode)
+                return;
             dragged.FindForm().Cursor = Cursors.Default;
             dragged = null;
         }
 
         static void KeyDown(object sender, KeyEventArgs e)
         {
-            if (selected == null)
-                return;
             switch (e.KeyCode)
             {
+                case Keys.F1:
+                    editMode = !editMode;
+                    ((Control)sender).FindForm().Icon = editMode ? SystemIcons.Exclamation : originalIcon;
+                    break;
+
                 case Keys.F2:
                     resizeMode = !resizeMode;
                     SetText(selected);
                     break;
 
                 case Keys.F3:
-                    new PropertiesForm(selected).ShowDialog();
+                    if (selected != null)
+                        new PropertiesForm(selected).ShowDialog();
                     break;
             }
         }
@@ -177,6 +188,7 @@ namespace WindowsFormsHelper
 
         public static void AddHelper(Form form)
         {
+            originalIcon = form.Icon;
             foreach (Control control in form.Controls)
             {
                 control.MouseDown += MouseDown;
